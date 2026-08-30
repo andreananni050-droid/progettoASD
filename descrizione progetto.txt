@@ -10,6 +10,18 @@ riorganizzo gli archi salvati in precedenza con peso in una lista di adiacenza.
 -funzione query:
 creo una funzione che dati i nodi u,v in input mi restituisce il costo del cammino minimax ottimo da u e v. Un modo semplice per implementarlo è con l'algoritmo di Dijkstra dove aggiungo alla priority queue la coppia (-peso massimo di un arco nel percorso, nodo) se migliora il risultato di volta in volta. Qui l'aggiornamento dei pesi è un max invece che una somma come nel caso standard di Dijkstra.
 
+Strutture dati da utilizzare:
+-Gli archi letti dai cammini BGP li metto in una tabella Hash (mappa) che assegna ad ogni array<long long,2> (coppia di long long che rappresentano i nodi incidenti all'arco) un long long (che rappresenta il numero di volte che quell'arco appartiene ad un percorso BGP ovvero il peso).
+-Per la compressione dei nodi uso di nuovo una tabella Hash (mappa) che assegna ad ogni indice originale l'indice compresso.
+-Per la lista di adiacenta uso un vector<vector<array<long long,2>>> ovvero un vector le cui posizioni mi rappresentano i nodi, ognuna delle quali contiene un vector con le coppie (nodo uscente, peso dell'arco che li connette).
+-Siccome si basa su Dijkstra mi servirà una priority queue contente le coppie array<long long,2> (arco di peso massimo del percorso attuale,indice nodo)
+
+Interazioni tra moduli:
+I moduli vengono eseguiti in sequenza nell'ordine con cui li ho elencati. Ogni modulo utilizza le strutture dati costruite dai precedenti: 
+-La lista di adiacenza che rappresenta il grafo viene costruita sfruttando la mappa che associa ad ogni arco il proprio peso.
+-Nella funzione query ogni volta che ricevo in input (u,v) con gli indici originali uso la mappa per la compressione.
+-La funzione query si basa sulla lista di adiacenza costruita in precedenza.
+
 
 
 
