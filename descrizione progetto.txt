@@ -35,6 +35,16 @@ Leggo il file di input scorrendo i path BGP e incremento i valori della mappa co
 
 per efficienza e compattezza del codice, la compressione la faccio contemporaneamente alla prima lettura del file. Inoltre la mappa M ora fa riferimento agli identificativi compressi e non più quelli originali. Realizzo la compressione usando una tabella Hash C (mappa da long long a long long)
 
+Costo computazionale: O(Elog(E)) dove E è la somma delle lunghezze dei cammini BGP
+Il costo principale è dovuto agli inserimenti nelle due tabelle Hash, in particolare quella contenente i pesi degli archi  il cui costo per ogni iterazione è O(Log(E)) e sovrasta il costo di lettura e parsing delle stringhe che complessivamente hanno un costo lineare
+
+--------------------------------------------------------------------------------------------
+Lista di adiacenza
+--------------------------------------------------------------------------------------------
+Per creare le liste di adiacenza scorro la mappa M contenente tutte le coppie di nodi degli archi è i loro pesi e li aggiungo al vector di vector di array<long long,2> descritto nella sezione strutture dati usando la funzione push_back()
+Costo computazionale: O(E)
+è la complessità di scorrimento della tavola Hash (mappa)
+
 
 
 
