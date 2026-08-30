@@ -1,1 +1,15 @@
 progettoASD
+Il software sarà organizzato in questi moduli:
+-lettura del file di input:
+prendo gli archi dalla sequenza di cammini BGP e trovo i pesi.
+-compressione dei nodi:
+essendo i nodi potenzialmente di indici molto grandi li comprimo a interi consecutivi da 0 in poi.
+-costruzione grafo: 
+riorganizzo gli archi salvati in precedenza con peso in una lista di adiacenza.
+(nota: per costruire il grafo mi basta leggere la sequenza dei cammini BGP in quanto, secondo la documentazione, le relazioni tra AS sono derivate dai cammini BGP)
+-funzione query:
+creo una funzione che dati i nodi u,v in input mi restituisce il costo del cammino minimax ottimo da u e v. Un modo semplice per implementarlo è con l'algoritmo di Dijkstra dove aggiungo alla priority queue la coppia (-peso massimo di un arco nel percorso, nodo) se migliora il risultato di volta in volta. Qui l'aggiornamento dei pesi è un max invece che una somma come nel caso standard di Dijkstra.
+
+
+
+
