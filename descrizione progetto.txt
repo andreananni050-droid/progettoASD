@@ -3,7 +3,7 @@ Il software sarà organizzato in questi moduli:
 -lettura del file di input:
 prendo gli archi dalla sequenza di cammini BGP e trovo i pesi.
 -compressione dei nodi:
-essendo i nodi potenzialmente di indici molto grandi li comprimo a interi consecutivi da 0 in poi.
+essendo i nodi potenzialmente di indici molto grandi li comprimo a interi consecutivi da 1 in poi.
 -costruzione grafo: 
 riorganizzo gli archi salvati in precedenza con peso in una lista di adiacenza.
 (nota: per costruire il grafo mi basta leggere la sequenza dei cammini BGP in quanto, secondo la documentazione, le relazioni tra AS sono derivate dai cammini BGP)
@@ -23,7 +23,7 @@ I moduli vengono eseguiti in sequenza nell'ordine con cui li ho elencati. Ogni m
 -La funzione query si basa sulla lista di adiacenza costruita in precedenza.
 
 --------------------------------------------------------------------------------------------
-Modulo lettura file di input:
+Modulo lettura file di input e compressione:
 --------------------------------------------------------------------------------------------
 assumiamo che il file di input abbia la forma 
 "routeviews/routeviews|5 3561|3847|6618 198.137.143.0/24 i 204.70.4.89"
@@ -33,6 +33,7 @@ Per leggerlo uso lo spazio come separatore con getline, quindi uso la stessa fun
 Creo una mappa map<array<long long,2>,long long> M.
 Leggo il file di input scorrendo i path BGP e incremento i valori della mappa corrispondenti agli archi del percorso BGP in entrambe le direzioni (se (a,b,c,d) è il percorso BPG faccio M[{a,b}]++,M[{b,a}]++,M[{b,c}]++,M[{c,b}]++, etc)
 
+per efficienza e compattezza del codice, la compressione la faccio contemporaneamente alla prima lettura del file. Inoltre la mappa M ora fa riferimento agli identificativi compressi e non più quelli originali. Realizzo la compressione usando una tabella Hash C (mappa da long long a long long)
 
 
 
