@@ -22,6 +22,19 @@ I moduli vengono eseguiti in sequenza nell'ordine con cui li ho elencati. Ogni m
 -Nella funzione query ogni volta che ricevo in input (u,v) con gli indici originali uso la mappa per la compressione.
 -La funzione query si basa sulla lista di adiacenza costruita in precedenza.
 
+--------------------------------------------------------------------------------------------
+Modulo lettura file di input:
+--------------------------------------------------------------------------------------------
+assumiamo che il file di input abbia la forma 
+"routeviews/routeviews|5 3561|3847|6618 198.137.143.0/24 i 204.70.4.89"
+dove il percorso BGS è rappresentato da 3561|3847|6618, quindi ho delle righe della forma "testoinutile nodo1|nodo2|...|nodok testoinutile".
+Per leggerlo uso lo spazio come separatore con getline, quindi uso la stessa funzione getline sul cammino usando come separatore '|' e converto in numero long long ogni identificatore ottenuto, usando la funzione stoll.
+
+Creo una mappa map<array<long long,2>,long long> M.
+Leggo il file di input scorrendo i path BGP e incremento i valori della mappa corrispondenti agli archi del percorso BGP in entrambe le direzioni (se (a,b,c,d) è il percorso BPG faccio M[{a,b}]++,M[{b,a}]++,M[{b,c}]++,M[{c,b}]++, etc)
+
+
+
 
 
 
