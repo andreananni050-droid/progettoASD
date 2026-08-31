@@ -41,6 +41,7 @@ Il costo principale è dovuto agli inserimenti nelle due tabelle Hash, in partic
 --------------------------------------------------------------------------------------------
 modulo Lista di adiacenza
 --------------------------------------------------------------------------------------------
+La lunghezza della lista di adiacenza la fisso all'interno di questo modulo con la funzione resize() usando il parametro ccount che in precedenza avevo creato per la compressione (dopo la compressione mi indica il numero totale di nodi nel grafo).
 Per creare le liste di adiacenza scorro la mappa M contenente tutte le coppie di nodi degli archi è i loro pesi e li aggiungo al vector di vector di array<long long,2> descritto nella sezione strutture dati usando la funzione push_back()
 Costo computazionale: O(E)
 è la complessità di scorrimento della tavola Hash (mappa)
@@ -62,5 +63,5 @@ all'inizio metto nella priority queue djk solo {0,x} il punto di partenza con di
 Con un while finchè la priority queue non diventa vuota o fin quando non trovo il valore cercato eseguo l'algoritmo di Dijkstra:
 estraggo l'elemento q in cima a djk e lo elimino da djk, se il nodo q[1] estratto è y per monotonia dovrà avere peso minimo -q[0] e quindi mi da la risposta alla query quindi faccio return direttamente in modo da non fare calcoli inutili. Se il nodo q[1] estratto ha peso -q[0] maggiore di dis[q[1]] vuol dire che questo nodo è già stato visitato in precedenza con un peso -q[0] minore e non ci sono dis[] dei nodi adiacenti da aggiornare quindi posso saltare questo ciclo e andare al prossimo per risparmiare in efficienza.
 Ora se il nodo estratto non rientra nei casi precedentemente elencati, scorro i nodi ad esso adiacenti e se ottengo delle dis[] migliori (prendendo il max tra dis[q[1]] e -q[0]) le aggiorno e aggiungo il nodo con la dis aggiornata alla priority queue (-dis[node],node) 
- 
+
 
