@@ -39,13 +39,23 @@ Costo computazionale: O(Elog(E)) dove E è la somma delle lunghezze dei cammini 
 Il costo principale è dovuto agli inserimenti nelle due tabelle Hash, in particolare quella contenente i pesi degli archi  il cui costo per ogni iterazione è O(Log(E)) e sovrasta il costo di lettura e parsing delle stringhe che complessivamente hanno un costo lineare
 
 --------------------------------------------------------------------------------------------
-Lista di adiacenza
+modulo Lista di adiacenza
 --------------------------------------------------------------------------------------------
 Per creare le liste di adiacenza scorro la mappa M contenente tutte le coppie di nodi degli archi è i loro pesi e li aggiungo al vector di vector di array<long long,2> descritto nella sezione strutture dati usando la funzione push_back()
 Costo computazionale: O(E)
 è la complessità di scorrimento della tavola Hash (mappa)
 
 
+
+--------------------------------------------------------------------------------------------
+modulo Query minmax
+--------------------------------------------------------------------------------------------
+creo una funzione query(long long u,long long v).
+Innanzitutto devo comprimere i nodi dati in input in modo da renderli compatibili con la lista di adiacenza,
+li sostituisco con x = C[u] e y = C[v] le versioni compresse.
+definisco le seguenti strutture dati che mi serviranno per l'algoritmo di Dijkstra:
+-priority_queue<array<long long,2>> djk che conterrà le coppie (-peso massimo percorso da x fino a nodo, nodo) dove uso il segno - perchè dalle priority queue estraggo con la funzione top() il massimo (in ordine lessicografico essendo fatto di array<long long,2>) e a me ad ogni passo serve estrarre la coppia con peso minimo
+-vector<long long> dis(ccount+1) che conterrà all'inizio "infinito" in ogni posizione tranne nel punto di partenza x dove invece varrà zero e di volta in volta verrà aggiornato per contenere l'attuale minmax da u al nodo scelto.
 
 
 
