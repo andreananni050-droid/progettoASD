@@ -67,7 +67,12 @@ Ora se il nodo estratto non rientra nei casi precedentemente elencati, scorro i 
 Complessità computazionale: O(Elog(E))
 Questa è esattamente la complessità computazionali di Dijkstra, perchè lo schema dell'algoritmo è lo stesso: ogni nodo viene inserito nella priority queue un numero di volte che è al massimo pari al suo grado, quindi dato che la somma dei gradi è 2*E il numero di inserimenti e estrazioni è O(E) (quindi anche la coda ha al massimo quella grandezza) e ogni estrazione/inserimento costa O(log(E)) per un totale di O(Elog(E)).
 
-
+--------------------------------------------------------------------------------------------
+Test del codice
+--------------------------------------------------------------------------------------------
+Unisco i moduli in un unico file, per semplicità, che chiamo unione_moduli.cpp.
+Lo testo sul file di input 19980101.all-paths dal sito publicdata.caida.org. Nota:il file è stato decompresso prima di utilizzarlo.
+Provando le query per alcune coppie di nodi dà sempre risultati ragioneveli (mi limito ad una valutazione qualitativa in quanto non sono presenti le risposte agli esempi di query) e testando casi particolari come quello della coppia (234,266) dove 234 risulta essere una foglia il minmax in output corrispendo correttamente al numero di volte che tale arco è presente nel file di input.
 
 
 
