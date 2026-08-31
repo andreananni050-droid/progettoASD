@@ -57,5 +57,10 @@ definisco le seguenti strutture dati che mi serviranno per l'algoritmo di Dijkst
 -priority_queue<array<long long,2>> djk che conterrà le coppie (-peso massimo percorso da x fino a nodo, nodo) dove uso il segno - perchè dalle priority queue estraggo con la funzione top() il massimo (in ordine lessicografico essendo fatto di array<long long,2>) e a me ad ogni passo serve estrarre la coppia con peso minimo
 -vector<long long> dis(ccount+1) che conterrà all'inizio "infinito" in ogni posizione tranne nel punto di partenza x dove invece varrà zero e di volta in volta verrà aggiornato per contenere l'attuale minmax da u al nodo scelto.
 
-
+Descrizione dettagliata del processo:
+all'inizio metto nella priority queue djk solo {0,x} il punto di partenza con distanza zero.
+Con un while finchè la priority queue non diventa vuota o fin quando non trovo il valore cercato eseguo l'algoritmo di Dijkstra:
+estraggo l'elemento q in cima a djk e lo elimino da djk, se il nodo q[1] estratto è y per monotonia dovrà avere peso minimo -q[0] e quindi mi da la risposta alla query quindi faccio return direttamente in modo da non fare calcoli inutili. Se il nodo q[1] estratto ha peso -q[0] maggiore di dis[q[1]] vuol dire che questo nodo è già stato visitato in precedenza con un peso -q[0] minore e non ci sono dis[] dei nodi adiacenti da aggiornare quindi posso saltare questo ciclo e andare al prossimo per risparmiare in efficienza.
+Ora se il nodo estratto non rientra nei casi precedentemente elencati, scorro i nodi ad esso adiacenti e se ottengo delle dis[] migliori (prendendo il max tra dis[q[1]] e -q[0]) le aggiorno e aggiungo il nodo con la dis aggiornata alla priority queue (-dis[node],node) 
+ 
 
