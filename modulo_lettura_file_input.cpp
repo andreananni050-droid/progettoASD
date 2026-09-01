@@ -2,7 +2,7 @@
 using namespace std;
 map<array<long long,2>,long long> M;
 map<long long,long long> C;
-long long ccounter = 1;
+long long ccount = 1;
 void lettura(){
     vector<long long> p;
     string filename = "19980101.all-paths";

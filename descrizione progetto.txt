@@ -94,7 +94,15 @@ Questo ci permette di ridurre la loro complessità in vari modi, ognuno richiede
 
   1) O(N) semplicemente scorrendo l'albero con una bfs da u a v
 
-  2) O(Log(N)) implementando una funzione che restituisce in tempo logaritmico il LCA tra 2 nodi qualsiasi e salvando per ogni nodo il massimo peso del percorso da lui all genitore 2^k-esimo in modo da poter implementare una funzione che in tempo logaritmico mi restituisce il massimo da lui ad un suo ancestor. Così quindi presi u,v dalla query posso trovare in O(Log(N)) LCA(u,v) e in seguito i massimi nei percorsi da u a LCA(u,v) e da v a LCA(u,v) di nuovo in O(Log(N)) e la risposta alla query è il massimo tra questi due valori trovati.
+  2) O(Log(N)) implementando una funzione che restituisce in teQuindi una volta trovato con Kruskal il minimum spanning tree è sufficiente svolgere le query su di esso.
+Questo ci permette di ridurre la loro complessità potenzialmente a:
+1) O(N) semplicemente scorrendo l'albero con una bfs da u a v
+2) O(Log(N)) implementando una funzione che restituisce in tempo logaritmico il LCA tra 2 nodi qualsiasi e salvando per ogni nodo il massimo peso del percorso da lui all genitore 2^k-esimo in modo da poter implementare una funzione che in tempo logaritmico mi restituisce il massimo da lui ad un suo ancestor. Così quindi presi u,v dalla query posso trovare in O(Log(N)) LCA(u,v) e in seguito i massimi nei percorsi da u a LCA(u,v) e da v a LCA(u,v) di nuovo in O(Log(N)) e la risposta alla query è il massimo tra questi due valori trovati.
+2*)O(Log(N)) creando durante l'algoritmo di Kruskal un albero tale che contiene in LCA(u,v) direttamente il massimo nel percorso da u a v.
+Più precisamente, ogni volta che l'algoritmo di Kruskal dovrebbe aggiungere un arco, inseriamo invece un nodo con peso uguale a quello di tale arco, connettendolo alla radice delle componenti connesse degli estremi dell'arco. Questo funziona perchè per monotonia di Kruskal l'arco di peso massimo nel percorso tra due nodi è l'ultimo ad essere aggiunto e il LCA tra due nodi una volta che le loro componenti connesse vengono unite sarà il nodo aggiunto per ultimo ovvero esattamente quello con peso massimo. Questo albero ha 2*N-1 nodi e può essere implementato con lo stesso costo dell'algoritmo di Kruskal. Per rispondere alla query come nel punto 2) implemento una funzione che mi restituisce il LCA in tempo logaritmico.
+3) O(1) continuo come in 2* ma implemento la funzione per l'LCA in modo che risponda in O(1) è possibile mettendo i nodi in un vector nell'ordine di visita della dfs (i nodi possono apparire più volte) così per coppia di nodi è possibile identificare il sottoalbero che li contiene come intervallo di questo vector, quindi assegnando ai nodi del vector la loro profondità nell'albero con una query di range minimum (che può essere fatta in O(1) con sparse table) e possibile ottenere il LCA in quanto sarà il nodo con profondità minima in tale sottoalbero.
+
+Mi limiterò a scrivere la soluzione base 1) e la 2*) per semplicità di implementazione. mpo logaritmico il LCA tra 2 nodi qualsiasi e salvando per ogni nodo il massimo peso del percorso da lui all genitore 2^k-esimo in modo da poter implementare una funzione che in tempo logaritmico mi restituisce il massimo da lui ad un suo ancestor. Così quindi presi u,v dalla query posso trovare in O(Log(N)) LCA(u,v) e in seguito i massimi nei percorsi da u a LCA(u,v) e da v a LCA(u,v) di nuovo in O(Log(N)) e la risposta alla query è il massimo tra questi due valori trovati.
 
   2*) O(Log(N)) creando durante l'algoritmo di Kruskal un albero tale che contiene in LCA(u,v) direttamente il massimo nel percorso da u a v.
 Più precisamente, ogni volta che l'algoritmo di Kruskal dovrebbe aggiungere un arco, inseriamo invece un nodo con peso uguale a quello di tale arco, connettendolo alla radice delle componenti connesse degli estremi dell'arco. Questo funziona perchè per monotonia di Kruskal l'arco di peso massimo nel percorso tra due nodi è l'ultimo ad essere aggiunto e il LCA tra due nodi una volta che le loro componenti connesse vengono unite sarà il nodo aggiunto per ultimo ovvero esattamente quello con peso massimo. Questo albero ha 2*N-1 nodi e può essere implementato con lo stesso costo dell'algoritmo di Kruskal. Per rispondere alla query come nel punto 2) implemento una funzione che mi restituisce il LCA in tempo logaritmico.
@@ -103,7 +111,21 @@ Più precisamente, ogni volta che l'algoritmo di Kruskal dovrebbe aggiungere un 
 
 Mi limiterò a scrivere la soluzione base 1) e la 2*) per semplicità di implementazione. 
 
+-------------------------------------------------------------------------------------------------------------------------------------------------
+Descrizione dettagliata della soluzione a costo O(N)
+-------------------------------------------------------------------------------------------------------------------------------------------------
+Strutture dati:
+-vector<array<long long,3>> edges, il vector che conterrà i pesi e gli estremi degli archi da ordinare per l'algoritmo di Kruskal
+-per l'union find userò i vector lin (mi indica il rappresentante della componente connessa) e siz (il numero di nodi della componente connessa)
+-vector<vector<array<long long,2>>> mst la lista di adiacenza dell'albero ottenuto con Kruskal
 
++le strutture dati già definite negli altri moduli
 
+Funzioni:
+-funzione lettura archi, la copio dalla funzione lettura di prima dove in M ora metto solo gli archi in una direzione (solo (a,b) con a > b) e li aggiungo a edges con il peso.
+-Per la union-find mi serviranno 3 funzioni: long long fin(long long x) che mi restituisce la radice della componente connessa in O(log(N)) (risale l'albero binario), bool same(ll x,ll y) che mi dice se x e y appartengono alla stessa componente connessa e void uni(long long x,long long y), la funzione che unisce 2 componenti assegnando a lin della radice della componente più piccola la radice della componente più grande, in modo da mantenere la profondità dell'albero <= log(N), e aggiornando siz.
+-la funzione Kruskal mi crea l'albero ordinando il vettore edges e aggiungendo di volta in volta gli archi che collegano nodi non già connessi nella union find e aggiornando il loro stato in essa con la funzione uni (l'algoritmo di Kruskal).
+-la funzione Query comprime i nodi e esegue una BFS che aggiorna per ogni posizione il peso massimo del percorso dal nodo di partezza e si ferma una volta raggiunto il nodo di arrivo. 
+Tale funzione ha costo computazionale di O(N) l'efficienza di una BFS.
 
 
