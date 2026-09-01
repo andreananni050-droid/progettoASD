@@ -64,7 +64,7 @@ Con un while finchè la priority queue non diventa vuota o fin quando non trovo 
 estraggo l'elemento q in cima a djk e lo elimino da djk, se il nodo q[1] estratto è y per monotonia dovrà avere peso minimo -q[0] e quindi mi da la risposta alla query quindi faccio return direttamente in modo da non fare calcoli inutili. Se il nodo q[1] estratto ha peso -q[0] maggiore di dis[q[1]] vuol dire che questo nodo è già stato visitato in precedenza con un peso -q[0] minore e non ci sono dis[] dei nodi adiacenti da aggiornare quindi posso saltare questo ciclo e andare al prossimo per migliorare in efficienza.
 Ora se il nodo estratto non rientra nei casi precedentemente elencati, scorro i nodi ad esso adiacenti e se ottengo delle dis[] migliori (prendendo il max tra dis[q[1]] e -q[0]) le aggiorno e aggiungo il nodo con la dis aggiornata alla priority queue (-dis[node],node) 
 
-Complessità computazionale: O(Elog(E))
+Complessità computazionale per query: O(Elog(E))
 Questa è esattamente la complessità computazionali di Dijkstra, perchè lo schema dell'algoritmo è lo stesso: ogni nodo viene inserito nella priority queue un numero di volte che è al massimo pari al suo grado, quindi dato che la somma dei gradi è 2*E il numero di inserimenti e estrazioni è O(E) (quindi anche la coda ha al massimo quella grandezza) e ogni estrazione/inserimento costa O(log(E)) per un totale di O(Elog(E)).
 
 --------------------------------------------------------------------------------------------
@@ -73,6 +73,20 @@ Test del codice
 Unisco i moduli in un unico file, per semplicità, che chiamo unione_moduli.cpp.
 Lo testo sul file di input 19980101.all-paths dal sito publicdata.caida.org. Nota:il file è stato decompresso prima di utilizzarlo.
 Provando le query per alcune coppie di nodi dà sempre risultati ragioneveli (mi limito ad una valutazione qualitativa in quanto non sono presenti le risposte agli esempi di query) e testando casi particolari come quello della coppia (234,266) dove 234 risulta essere una foglia il minmax in output corrispendo correttamente al numero di volte che tale arco è presente nel file di input.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+Versioni più efficienti:
+-------------------------------------------------------------------------------------------------------------------------------------------------
+è possibile rendere molto più efficiente la funzione query notando il seguente fatto
+Lemma:per ogni u,v nodi del grafo con archi pesati, il percorso da u a v appartenente al minimum spanning tree ottenuto dall'algoritmo di Kruskal ha sempre massimo peso uguale al costo minmax ottimo.
+dimostrazione: sia e1 l'arco con peso massimo w nel path da u a v appartenente al minimum spanning tree. assumiamo per assurdo che esista un path P da u a v nel grafo con massimo più piccolo di w, allora durante l'algoritmo di Kruskal l'arco e1 sarebbe stato estratto dopo tutti gli archi nel path P. Ma questo è assurdo perchè allora e1 non dovrebbe appartenere al mst di Kruskal perchè nel momento della sua estrazione u e v già appartenevano alla stessa componente connessa.
+
+
+
 
 
 
