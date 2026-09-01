@@ -1,4 +1,6 @@
 progettoASD
+
+
 Il software sarà organizzato in questi moduli:
 -lettura del file di input:
 prendo gli archi dalla sequenza di cammini BGP e trovo i pesi.
@@ -81,10 +83,25 @@ Provando le query per alcune coppie di nodi dà sempre risultati ragioneveli (mi
 -------------------------------------------------------------------------------------------------------------------------------------------------
 Versioni più efficienti:
 -------------------------------------------------------------------------------------------------------------------------------------------------
-è possibile rendere molto più efficiente la funzione query notando il seguente fatto
-Lemma:per ogni u,v nodi del grafo con archi pesati, il percorso da u a v appartenente al minimum spanning tree ottenuto dall'algoritmo di Kruskal ha sempre massimo peso uguale al costo minmax ottimo.
-dimostrazione: sia e1 l'arco con peso massimo w nel path da u a v appartenente al minimum spanning tree. assumiamo per assurdo che esista un path P da u a v nel grafo con massimo più piccolo di w, allora durante l'algoritmo di Kruskal l'arco e1 sarebbe stato estratto dopo tutti gli archi nel path P. Ma questo è assurdo perchè allora e1 non dovrebbe appartenere al mst di Kruskal perchè nel momento della sua estrazione u e v già appartenevano alla stessa componente connessa.
+E' possibile rendere molto più efficiente la funzione query notando il seguente fatto:
 
+Lemma:per ogni u,v nodi del grafo con archi pesati, il percorso da u a v appartenente al minimum spanning tree ottenuto dall'algoritmo di Kruskal ha sempre massimo peso uguale al costo minmax ottimo.
+-
+Dimostrazione: sia e1 l'arco con peso massimo w nel path da u a v appartenente al minimum spanning tree. assumiamo per assurdo che esista un path P da u a v nel grafo con massimo più piccolo di w, allora durante l'algoritmo di Kruskal l'arco e1 sarebbe stato estratto dopo tutti gli archi nel path P. Ma questo è assurdo perchè allora e1 non dovrebbe appartenere al mst di Kruskal perchè nel momento della sua estrazione u e v già appartenevano alla stessa componente connessa.
+
+Quindi, una volta trovato con Kruskal il minimum spanning tree è sufficiente svolgere le query su di esso.
+Questo ci permette di ridurre la loro complessità in vari modi, ognuno richiedente un preprocessing di costo al più O(N Log(N)) che non supera il costo di costruzione del minimum spanning tree:
+
+  1) O(N) semplicemente scorrendo l'albero con una bfs da u a v
+
+  2) O(Log(N)) implementando una funzione che restituisce in tempo logaritmico il LCA tra 2 nodi qualsiasi e salvando per ogni nodo il massimo peso del percorso da lui all genitore 2^k-esimo in modo da poter implementare una funzione che in tempo logaritmico mi restituisce il massimo da lui ad un suo ancestor. Così quindi presi u,v dalla query posso trovare in O(Log(N)) LCA(u,v) e in seguito i massimi nei percorsi da u a LCA(u,v) e da v a LCA(u,v) di nuovo in O(Log(N)) e la risposta alla query è il massimo tra questi due valori trovati.
+
+  2*) O(Log(N)) creando durante l'algoritmo di Kruskal un albero tale che contiene in LCA(u,v) direttamente il massimo nel percorso da u a v.
+Più precisamente, ogni volta che l'algoritmo di Kruskal dovrebbe aggiungere un arco, inseriamo invece un nodo con peso uguale a quello di tale arco, connettendolo alla radice delle componenti connesse degli estremi dell'arco. Questo funziona perchè per monotonia di Kruskal l'arco di peso massimo nel percorso tra due nodi è l'ultimo ad essere aggiunto e il LCA tra due nodi una volta che le loro componenti connesse vengono unite sarà il nodo aggiunto per ultimo ovvero esattamente quello con peso massimo. Questo albero ha 2*N-1 nodi e può essere implementato con lo stesso costo dell'algoritmo di Kruskal. Per rispondere alla query come nel punto 2) implemento una funzione che mi restituisce il LCA in tempo logaritmico.
+
+  3) O(1) continuando come in 2*) ma implementando la funzione per l'LCA in modo che risponda in O(1). Questo è possibile mettendo i nodi in un vector nell'ordine di visita della dfs, inserendo ogni nodo prima e dopo aver visitato i suoi sottoalberi e memorizzando la posizione della prima e dell'ultima apparizione di ogni nodo. Ora, per una qualunque coppia di nodi u,v è possibile identificare il sottoalbero che li contiene come intervallo di questo vector, quindi assegnando ai nodi del vector la loro profondità nell'albero con una query di range minimum (che può essere fatta in O(1) con sparse table) è possibile ottenere il LCA in quanto sarà il nodo con profondità minima in tale sottoalbero.
+
+Mi limiterò a scrivere la soluzione base 1) e la 2*) per semplicità di implementazione. 
 
 
 
