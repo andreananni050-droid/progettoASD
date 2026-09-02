@@ -60,7 +60,7 @@ void kruskal(){
     weight.resize(2*ccount+1);
     parent.resize(2*ccount+1);
     roots.resize(2*ccount+1);
-    for(int i = 1;i <= ccount;i++){
+    for(int i = 1;i <= 2*ccount-1;i++){
         lin[i] = i;
         siz[i] = 1;
         roots[i] = i;
@@ -79,7 +79,7 @@ void kruskal(){
             ccount++;
         }
     }
-    long long root = 2*ccount-1;
+    long long root = ccount-1;
     depth[root] = 0;
     for(int i = root-1;i > 0;i--){
         depth[i] = depth[parent[i][0]]+1;
