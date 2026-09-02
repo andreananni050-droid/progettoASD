@@ -98,7 +98,7 @@ Questo ci permette di ridurre la loro complessità in vari modi, ognuno richiede
 
 
   2*) O(Log(N)) creando durante l'algoritmo di Kruskal un albero tale che contiene in LCA(u,v) direttamente il massimo nel percorso da u a v.
-Più precisamente, ogni volta che l'algoritmo di Kruskal dovrebbe aggiungere un arco, inseriamo invece un nodo con peso uguale a quello di tale arco, connettendolo alla radice delle componenti connesse degli estremi dell'arco. Questo funziona perchè per monotonia di Kruskal l'arco di peso massimo nel percorso tra due nodi è l'ultimo ad essere aggiunto e il LCA tra due nodi una volta che le loro componenti connesse vengono unite sarà il nodo aggiunto per ultimo ovvero esattamente quello con peso massimo. Questo albero ha 2*N-1 nodi e può essere implementato con lo stesso costo dell'algoritmo di Kruskal. Per rispondere alla query come nel punto 2) implemento una funzione che mi restituisce il LCA in tempo logaritmico.
+Più precisamente, ogni volta che l'algoritmo di Kruskal dovrebbe aggiungere un arco, inseriamo invece un nodo con peso uguale a quello di tale arco, connettendolo alla radice delle componenti connesse degli estremi dell'arco (con radice intendo il nodo rappresentante della componente connessa nella union find). Questo funziona perchè per monotonia di Kruskal l'arco di peso massimo nel percorso tra due nodi è l'ultimo ad essere aggiunto e il LCA tra due nodi una volta che le loro componenti connesse vengono unite sarà il nodo aggiunto per ultimo ovvero esattamente quello con peso massimo. Questo albero ha 2*N-1 nodi e può essere implementato con lo stesso costo dell'algoritmo di Kruskal. Per rispondere alla query come nel punto 2) implemento una funzione che mi restituisce il LCA in tempo logaritmico.
 
   3) O(1) continuando come in 2*) ma implementando la funzione per l'LCA in modo che risponda in O(1). Questo è possibile mettendo i nodi in un vector nell'ordine di visita della dfs, inserendo ogni nodo prima e dopo aver visitato i suoi sottoalberi e memorizzando la posizione della prima e dell'ultima apparizione di ogni nodo. Ora, per una qualunque coppia di nodi u,v è possibile identificare il sottoalbero che li contiene come intervallo di questo vector, quindi assegnando ai nodi del vector la loro profondità nell'albero con una query di range minimum (che può essere fatta in O(1) con sparse table) è possibile ottenere il LCA in quanto sarà il nodo con profondità minima in tale sottoalbero.
 
@@ -116,9 +116,36 @@ Strutture dati:
 
 Funzioni:
 -funzione lettura archi, la copio dalla funzione lettura di prima dove in M ora metto solo gli archi in una direzione (solo (a,b) con a > b) e li aggiungo a edges con il peso.
--Per la union-find mi serviranno 3 funzioni: long long fin(long long x) che mi restituisce la radice della componente connessa in O(log(N)) (risale l'albero binario), bool same(ll x,ll y) che mi dice se x e y appartengono alla stessa componente connessa e void uni(long long x,long long y), la funzione che unisce 2 componenti assegnando a lin della radice della componente più piccola la radice della componente più grande, in modo da mantenere la profondità dell'albero <= log(N), e aggiornando siz.
+-Per la union-find mi serviranno 3 funzioni: long long fin(long long x) che mi restituisce la radice della componente connessa in O(log(N)) (risale l'albero), bool same(ll x,ll y) che mi dice se x e y appartengono alla stessa componente connessa e void uni(long long x,long long y), la funzione che unisce 2 componenti assegnando a lin della radice della componente più piccola la radice della componente più grande, in modo da mantenere la profondità dell'albero <= log(N), e aggiornando siz.
 -la funzione Kruskal inizializza lin,siz,mst (assegnando la loro grandezza con resize) e mi crea l'albero ordinando il vettore edges e aggiungendo di volta in volta gli archi che collegano nodi non già connessi nella union find, aggiornando il loro stato in essa con la funzione uni (l'algoritmo di Kruskal).
 -la funzione Query comprime i nodi, inizializza le strutture dati per la bfs (la queue bfs, il vector dis contenente l'attuale massimo nel percorso dal punto di partenza e il vector di booleani vis che mi dice se un nodo è già stato visitato), esegue una BFS che aggiorna per ogni posizione il peso massimo del percorso dal nodo di partezza e si ferma una volta raggiunto il nodo di arrivo. 
 Tale funzione ha costo computazionale di O(N) l'efficienza di una BFS.
 
+-------------------------------------------------------------------------------------------------------------------------------------------------
+Descrizione dettagliata della soluzione 2*) a costo O(log(N))
+-------------------------------------------------------------------------------------------------------------------------------------------------
+Strutture dati: 
+vector<array<long long,21>> parent mi serve per salvare il genitore 2^k esimo quindi la grandezza 20 è sufficiente se il numero di nodi è <=10^6.
+vector<long long> depth conterrà la profondità di ogni nodo nel nuovo albero.
+vector<long long> weight conterrà il peso dei nodi corrispondente ad ogni aggiunta di un arco nell'algoritmo descritto in 2*) 
+vector<long long> roots conterrà la radice di ogni componente connessa costruita ad ogni istante (come per siz sarà assegnata al rappresentante della componente connessa, quindi per avere la radice della componente connessa contenente un nodo u dovrò fare roots[fin(u)]).
+il resto sono le stesse del caso O(N) ma non ho più bisogno di costruire la lista di adiacenza mst perchè mi serve solo sapere la profondità e i parent di ogni nodo nell'albero per implementare la funzione lca. Per come viene costruito l'albero vedremo in seguito queste cose si potranno ottenere direttamente durante la costruzione.
 
+Funzioni:
+funzione lettura come nel caso O(N).
+funzioni per la union find come nel caso O(N).
+funzione Kruskal inizializza lin,siz,depth,weight,parent. Poi fa il sort di edges e costruisce l'albero di grandezza 2*ccount-1 nel seguente modo
+scorro gli archi ordinati, quando trovo un arco (x,y) con x e y in componenti connesse distinte (controllo con la funzione same) 
+-aggiungo un nuovo nodo di indice ccount, 
+-gli assegno il peso dell'arco,
+-lo metto come parent delle radici delle componenti connesse di x e y,
+-lo unisco a queste componenti connesse nella union find,
+-lo fisso come radice della nuova componente connessa,
+-aumento ccount di 1. 
+Così ho costruito l'albero e notando le seguenti proprietà posso trovare depth di ogni suo nodo.
+Proprietà:
+1) La radice finale dell'albero è 2*ccount-1 quindi posso fissare depth[2*ccount-1] = 0.
+2) Ogni nodo ha come parent un nodo dell'insieme {ccount+1,...,2*ccount-1} dei nodi extra (non vengono mai connessi 2 nodi con indice <=ccount nel processo).
+3) Ogni nodo nell'insieme {ccount+1,...,2*ccount-1} ha come parent un nodo di indice maggiore (segue dalla monotonia di ccount durante il processo).
+Quindi posso trovare tutte le depth ricorsivamente scorrendo in ordine decrescente di indice i nodi dopo aver fissato depth[2*ccount-1] = 0,
+fissando ad ogni passo depth[v] = depth[parent[v]].
