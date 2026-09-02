@@ -133,7 +133,9 @@ il resto sono le stesse del caso O(N) ma non ho più bisogno di costruire la lis
 
 Funzioni:
 funzione lettura come nel caso O(N).
+
 funzioni per la union find come nel caso O(N).
+
 funzione Kruskal inizializza lin,siz,depth,weight,parent. Poi fa il sort di edges e costruisce l'albero di grandezza 2*ccount-1 nel seguente modo
 scorro gli archi ordinati, quando trovo un arco (x,y) con x e y in componenti connesse distinte (controllo con la funzione same) 
 -aggiungo un nuovo nodo di indice ccount, 
@@ -149,3 +151,13 @@ Proprietà:
 3) Ogni nodo nell'insieme {ccount+1,...,2*ccount-1} ha come parent un nodo di indice maggiore (segue dalla monotonia di ccount durante il processo).
 Quindi posso trovare tutte le depth ricorsivamente scorrendo in ordine decrescente di indice i nodi dopo aver fissato depth[2*ccount-1] = 0,
 fissando ad ogni passo depth[v] = depth[parent[v]].
+
+funzione void lca_preprocessing calcola i valori di parent[i][j] = 2^j-esimo ancestor di i, lo calcolo ricorsivamente (il passo base è parent[i][0] già fissato da Kruskal) con la formula parent[i][j] = parent[parent[i][j-1]][j-1] quindi scorrendo con 2 cicli for esternamente j e internamente i in ordine crescente ottengo tutti i valori in O(Nlog(N)) (perchè 20 è stato preso assumendo che fosse >=log(N) volendo potrei calcolarmi il log ogni volta)
+
+funzione long long lca(long long u,long long v) la implemento nel seguente modo:
+A meno di scambiare u e v assumo che u sia più in profondità di v, uso parent per trovare l'ancestor di u alla stessa profondità di v in O(Log(N)).
+Lo faccio salendo con u = parent[u][j] per ogni 2^j che compare nella rappresentazione binaria di depth[u]-depth[v]. Ora se u e v sono ancora distinti (in caso contrario ho trovato il lca) posso trovare il nodo sottostante all'lca scorrendo i bit dal più grande al più piccolo e aggiornando u e v se  e solo se parent[u][j] != parent[v][j] (è una binary search)
+()
+funzione long long query(long long u, long long v) comprime i nodi u,v in x,y e semplicemente restituisce weight[lca(x,y)]
+
+

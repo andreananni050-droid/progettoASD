@@ -6,7 +6,7 @@ vector<long long> siz;
 vector<long long> weight;
 vector<long long> depth;
 vector<long long> roots;
-vector<array<long long,20>> parent;
+vector<array<long long,21>> parent;
 map<long long,long long> C;
 map<array<long long,2>,long long> M;
 long long ccount = 1;
@@ -85,9 +85,35 @@ void kruskal(){
         depth[i] = depth[parent[i][0]]+1;
     }
 }
-void lca_preprocessing();
-long long lca(long long u,long long v);
-long long query(long long u, long long v);
+void lca_preprocessing(){
+    for(int j = 1;j < 21;j++){
+        for(int i = 1;i < ccount;i++){
+            parent[i][j] = parent[parent[i][j-1]][j-1];
+        }
+    }
+}
+long long lca(long long u, long long v) {
+    if(depth[u] < depth[v])swap(u,v);
+    for(int j = 20;j >= 0;j--) {
+        if(depth[u]-depth[v] >= ((long long)1<<j)) {
+            u = parent[u][j];
+        }
+    }
+    if(u == v)return u;
+    for(int j = 20;j >= 0;j--) {
+        if(parent[u][j] != parent[v][j]) {
+            u = parent[u][j];
+            v = parent[v][j];
+        }
+    }
+    return parent[u][0];
+}
+long long query(long long u,long long v){
+    long long x = C[u];
+    long long y = C[v];
+    return weight[lca(x,y)];
+}
+
 int main(){
     lettura();
     kruskal();
