@@ -72,6 +72,7 @@ void kruskal(){
             long long y = fin(u[2]);
             parent[roots[x]][0] = ccount;
             parent[roots[y]][0] = ccount;
+            parent[ccount][0] = ccount; //così da avere alla fine le radici delle componenti connesse con parent = se stesso
             uni(x,ccount);
             uni(y,ccount);
             roots[fin(ccount)] = ccount; //ccount è la radice nell'albero costruito contenente x,y per ora
@@ -79,10 +80,9 @@ void kruskal(){
             ccount++;
         }
     }
-    long long root = ccount-1;
-    depth[root] = 0;
-    for(int i = root-1;i > 0;i--){
-        depth[i] = depth[parent[i][0]]+1;
+    for(int i = ccount-1;i > 0;i--){
+        if(parent[i][0] != i)depth[i] = depth[parent[i][0]]+1;
+        else depth[i] = 0;
     }
 }
 void lca_preprocessing(){
@@ -111,6 +111,7 @@ long long lca(long long u, long long v) {
 long long query(long long u,long long v){
     long long x = C[u];
     long long y = C[v];
+    if(!same(x,y))return -1; // se u e v non sono connessi ritorna -1
     return weight[lca(x,y)];
 }
 
