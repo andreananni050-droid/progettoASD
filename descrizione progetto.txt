@@ -161,4 +161,9 @@ Lo faccio salendo con u = parent[u][j] per ogni 2^j che compare nella rappresent
 
 funzione long long query(long long u, long long v) comprime i nodi u,v in x,y e semplicemente restituisce weight[lca(x,y)]
 
+----------------------------------------------------------------------------------------------------------
+Problema 2) opzionale
+----------------------------------------------------------------------------------------------------------
+Per trovare il numero di cammini a costo minmax ottimo tra u e v, innanzitutto uso una delle soluzioni per il problema 1 per trovare il valore del costo minmax ottimo mmopt. In seguito, eseguo una dfs da u sul grafo ignorando gli archi con peso maggiore di mmopt e conto il numero di percorsi semplici che arrivano a v.
 
+ 
