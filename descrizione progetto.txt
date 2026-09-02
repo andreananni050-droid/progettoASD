@@ -117,7 +117,7 @@ Strutture dati:
 Funzioni:
 -funzione lettura archi, la copio dalla funzione lettura di prima dove in M ora metto solo gli archi in una direzione (solo (a,b) con a > b) e li aggiungo a edges con il peso.
 -Per la union-find mi serviranno 3 funzioni: long long fin(long long x) che mi restituisce la radice della componente connessa in O(log(N)) (risale l'albero), bool same(ll x,ll y) che mi dice se x e y appartengono alla stessa componente connessa e void uni(long long x,long long y), la funzione che unisce 2 componenti assegnando a lin della radice della componente più piccola la radice della componente più grande, in modo da mantenere la profondità dell'albero <= log(N), e aggiornando siz.
--la funzione Kruskal inizializza lin,siz,mst (assegnando la loro grandezza con resize) e mi crea l'albero ordinando il vettore edges e aggiungendo di volta in volta gli archi che collegano nodi non già connessi nella union find, aggiornando il loro stato in essa con la funzione uni (l'algoritmo di Kruskal).
+-la funzione Kruskal inizializza lin,siz,mst (assegnando la loro grandezza con resize) e mi crea l'albero ordinando il vettore edges e aggiungendo di volta in volta gli archi che collegano nodi non già connessi nella union find, aggiornando il loro stato in essa con la funzione uni (l'algoritmo di Kruskal quindi in O(Nlog(N)).
 -la funzione Query comprime i nodi, inizializza le strutture dati per la bfs (la queue bfs, il vector dis contenente l'attuale massimo nel percorso dal punto di partenza e il vector di booleani vis che mi dice se un nodo è già stato visitato), esegue una BFS che aggiorna per ogni posizione il peso massimo del percorso dal nodo di partezza e si ferma una volta raggiunto il nodo di arrivo. 
 Tale funzione ha costo computazionale di O(N) l'efficienza di una BFS.
 
@@ -165,5 +165,20 @@ funzione long long query(long long u, long long v) comprime i nodi u,v in x,y e 
 Problema 2) opzionale
 ----------------------------------------------------------------------------------------------------------
 Per trovare il numero di cammini a costo minmax ottimo tra u e v, innanzitutto uso una delle soluzioni per il problema 1 per trovare il valore del costo minmax ottimo mmopt. In seguito, eseguo una dfs da u sul grafo ignorando gli archi con peso maggiore di mmopt e conto il numero di percorsi semplici che arrivano a v.
+
+strutture dati:
+l'unica struttura dati non già presente nel problema 1 è vector<long long> vis che indica se un nodo è già stato visitato nell'attuale percorso della dfs.
+
+Funzioni:
+funzione void dfs(long long cur, long long target) è una normale dfs dove cur mi indica il nodo che stò visitando e target il nodo che voglio raggiungere.
+Quando target è uguale a cur incremento un contatore res e ritorno dalla chiamata della funzione. Per assicurarmi che i percorsi generati siano semplici utilizzo il vettore vis per segnare i nodi visitati nell'attuale percorso, quindi quando un nodo x viene visitato vis[x] diventa true,
+e dopo le chiamate ricorsive per visitare i nodi adiacenti vis[x] viene rimesso a false, così da poter essere attraversato da altri percorsi.
+Nota: soltanto i nodi adiacenti collegati da un arco con peso <=mmopt vengono visitati gli altri sono ignorati per garantire che i percorsi contati abbiano minmax = mmopt (ogni percorso trovato è ovviamente con massimo uguale a mmopt).
+
+funzione long long query2(long long u, long long v) comprime u e v in x,y chiama la funzione query(u,v) del codice di "progettoversione3.cpp" che restituisce mmopt tra x e y, inizializzo il contatore di percorsi res a 0 , chiama la dfs(x,y) ed infine ritorna res il numero di percorsi trovati dalla dfs.
+
+Complessità computazionale:la complessità computazione di una query è molto alta perchè dipende dal numero di percorsi finali generati.
+il caso pessimo è quello in cui tutto il grafo sia una cricca e quindi i percorsi visitati dalla dfs saranno (N-2)!, dato che ogni sottoinsieme ordinato che inizia per u e finisce per v forma un percorso semplice. Quindi la complessità è dominata da O((N-2)!)
+
 
  
