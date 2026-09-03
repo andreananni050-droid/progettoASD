@@ -29,7 +29,7 @@ Modulo lettura file di input e compressione:
 --------------------------------------------------------------------------------------------
 assumiamo che il file di input abbia la forma 
 "routeviews/routeviews|5 3561|3847|6618 198.137.143.0/24 i 204.70.4.89"
-dove il percorso BGS è rappresentato da 3561|3847|6618, quindi ho delle righe della forma "testoinutile nodo1|nodo2|...|nodok testoinutile".
+dove il percorso BGP è rappresentato da 3561|3847|6618, quindi ho delle righe della forma "testoinutile nodo1|nodo2|...|nodok testoinutile".
 Per leggerlo uso lo spazio come separatore con getline, quindi uso la stessa funzione getline sul cammino usando come separatore '|' e converto in numero long long ogni identificatore ottenuto, usando la funzione stoll.
 
 Creo una mappa map<array<long long,2>,long long> M.
@@ -94,7 +94,7 @@ Questo ci permette di ridurre la loro complessità in vari modi, ognuno richiede
 
   1) O(N) semplicemente scorrendo l'albero con una bfs da u a v
   
-  2) O(Log(N)) implementando una funzione che restituisce in tempo logaritmico il LCA tra 2 nodi qualsiasi e salvando per ogni nodo il massimo peso del percorso da lui all genitore 2^k-esimo in modo da poter implementare una funzione che in tempo logaritmico mi restituisce il massimo da lui ad un suo ancestor. Così quindi presi u,v dalla query posso trovare in O(Log(N)) LCA(u,v) e in seguito i massimi nei percorsi da u a LCA(u,v) e da v a LCA(u,v) di nuovo in O(Log(N)) e la risposta alla query è il massimo tra questi due valori trovati.
+  2) O(Log(N)) implementando una funzione che restituisce in tempo logaritmico il LCA tra 2 nodi qualsiasi e salvando per ogni nodo il massimo peso del percorso da lui al genitore 2^k-esimo in modo da poter implementare una funzione che in tempo logaritmico mi restituisce il massimo da lui ad un suo ancestor. Così quindi presi u,v dalla query posso trovare in O(Log(N)) LCA(u,v) e in seguito i massimi nei percorsi da u a LCA(u,v) e da v a LCA(u,v) di nuovo in O(Log(N)) e la risposta alla query è il massimo tra questi due valori trovati.
 
 
   2*) O(Log(N)) creando durante l'algoritmo di Kruskal un albero tale che contiene in LCA(u,v) direttamente il massimo nel percorso da u a v.
@@ -178,7 +178,7 @@ Nota: soltanto i nodi adiacenti collegati da un arco con peso <=mmopt vengono vi
 funzione long long query2(long long u, long long v) comprime u e v in x,y chiama la funzione query(u,v) del codice di "progettoversione3.cpp" che restituisce mmopt tra x e y, inizializzo il contatore di percorsi res a 0 , chiama la dfs(x,y) ed infine ritorna res il numero di percorsi trovati dalla dfs.
 
 Complessità computazionale:la complessità computazione di una query è molto alta perchè dipende dal numero di percorsi finali generati.
-il caso pessimo è quello in cui tutto il grafo sia una cricca e quindi i percorsi visitati dalla dfs saranno (N-2)!, dato che ogni sottoinsieme ordinato che inizia per u e finisce per v forma un percorso semplice. Quindi la complessità è dominata da O((N-2)!)
+il caso pessimo è quello in cui tutto il grafo sia una cricca e quindi i percorsi visitati dalla dfs saranno sum 2^k*(k!) per k da 0 a N-2, dato che ogni sottoinsieme ordinato che inizia per u e finisce per v forma un percorso semplice. Quindi la complessità è dominata da O(2^(N-2)*(N-2)!)
 
 Analisi sperimentale:
 Test funzionali: per verificare la correttezza del codice uso il caso dell'esempio base dato nel testo  
@@ -197,19 +197,19 @@ input: (2,3) output: 1 corretto
 
 Test di performace: utilizzo il file .all-paths.bz2 con coppie estratte randomicamente per le query
 input: 234 266   output: 1     tempo di esecuzione: 2.993 s
-input: 4359 1800 output: ?     tempo di esecuzione: troppo
-input: 3561 6618 output: ?     tempo di esecuzione: troppo
+input: 4359 1800 output: ?     tempo di esecuzione: >100 s
+input: 3561 6618 output: ?     tempo di esecuzione: >100 s
 input: 293 701   output: 11    tempo di esecuzione: 3.031 s
 input: 2497 1    output: 8     tempo di esecuzione: 3.006 s
 input: 1740 1239 output: 129   tempo di esecuzione: 2.986 s
 input: 293 1239  output: 6     tempo di esecuzione: 2.986 s
-input: 234 7570  output: ?     tempo di esecuzione: troppo
-input: 293 4681  output: ?     tempo di esecuzione: troppo
-input: 3561 4650 output: ?     tempo di esecuzione: troppo
+input: 234 7570  output: ?     tempo di esecuzione: >100 s
+input: 293 4681  output: ?     tempo di esecuzione: >100 s
+input: 3561 4650 output: ?     tempo di esecuzione: >100 s
 input: 3561 1740 output: 68125 tempo di esecuzione: 6.014 s
-input: 3561 816  output: ?     tempo di esecuzione: troppo
+input: 3561 816  output: ?     tempo di esecuzione: >100 s
 
-Essendo il grafo molto grande quasi sempre ci mette troppo tempo a controllare i percorsi con la dfs
+Essendo il grafo molto grande spesso ci mette troppo tempo a controllare i percorsi con la dfs.
   
  
 
