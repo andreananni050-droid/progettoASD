@@ -13,8 +13,8 @@ riorganizzo gli archi salvati in precedenza con peso in una lista di adiacenza.
 creo una funzione che dati i nodi u,v in input mi restituisce il costo del cammino minimax ottimo da u e v. Un modo semplice per implementarlo è con l'algoritmo di Dijkstra dove aggiungo alla priority queue la coppia (-peso massimo di un arco nel percorso, nodo) se migliora il risultato di volta in volta. Qui l'aggiornamento dei pesi è un max invece che una somma come nel caso standard di Dijkstra.
 
 Strutture dati da utilizzare:
--Gli archi letti dai cammini BGP li metto in una tabella Hash (mappa) che assegna ad ogni array<long long,2> (coppia di long long che rappresentano i nodi incidenti all'arco) un long long (che rappresenta il numero di volte che quell'arco appartiene ad un percorso BGP ovvero il peso).
--Per la compressione dei nodi uso di nuovo una tabella Hash (mappa) che assegna ad ogni indice originale l'indice compresso.
+-Gli archi letti dai cammini BGP li metto in una mappa che assegna ad ogni array<long long,2> (coppia di long long che rappresentano i nodi incidenti all'arco) un long long (che rappresenta il numero di volte che quell'arco appartiene ad un percorso BGP ovvero il peso).
+-Per la compressione dei nodi uso di nuovo una mappa che assegna ad ogni indice originale l'indice compresso.
 -Per la lista di adiacenta uso un vector<vector<array<long long,2>>> ovvero un vector le cui posizioni mi rappresentano i nodi, ognuna delle quali contiene un vector con le coppie (nodo uscente, peso dell'arco che li connette).
 -Siccome si basa su Dijkstra mi servirà una priority queue contente le coppie array<long long,2> (arco di peso massimo del percorso attuale,indice nodo)
 
@@ -35,10 +35,10 @@ Per leggerlo uso lo spazio come separatore con getline, quindi uso la stessa fun
 Creo una mappa map<array<long long,2>,long long> M.
 Leggo il file di input scorrendo i path BGP e incremento i valori della mappa corrispondenti agli archi del percorso BGP in entrambe le direzioni (se (a,b,c,d) è il percorso BPG faccio M[{a,b}]++,M[{b,a}]++,M[{b,c}]++,M[{c,b}]++, etc)
 
-per efficienza e compattezza del codice, la compressione la faccio contemporaneamente alla prima lettura del file. Inoltre la mappa M ora fa riferimento agli identificativi compressi e non più quelli originali. Realizzo la compressione usando una tabella Hash C (mappa da long long a long long)
+per efficienza e compattezza del codice, la compressione la faccio contemporaneamente alla prima lettura del file. Inoltre la mappa M ora fa riferimento agli identificativi compressi e non più quelli originali. Realizzo la compressione usando una mappa C (mappa da long long a long long)
 
 Costo computazionale: O(Elog(E)) dove E è la somma delle lunghezze dei cammini BGP
-Il costo principale è dovuto agli inserimenti nelle due tabelle Hash, in particolare quella contenente i pesi degli archi  il cui costo per ogni iterazione è O(Log(E)) e sovrasta il costo di lettura e parsing delle stringhe che complessivamente hanno un costo lineare
+Il costo principale è dovuto agli inserimenti nelle due mappe, in particolare quella contenente i pesi degli archi  il cui costo per ogni iterazione è O(Log(E)) e sovrasta il costo di lettura e parsing delle stringhe che complessivamente hanno un costo lineare
 
 --------------------------------------------------------------------------------------------
 modulo Lista di adiacenza
@@ -46,7 +46,7 @@ modulo Lista di adiacenza
 La lunghezza della lista di adiacenza la fisso all'interno di questo modulo con la funzione resize() usando il parametro ccount che in precedenza avevo creato per la compressione (dopo la compressione mi indica il numero totale di nodi nel grafo).
 Per creare le liste di adiacenza scorro la mappa M contenente tutte le coppie di nodi degli archi è i loro pesi e li aggiungo al vector di vector di array<long long,2> descritto nella sezione strutture dati usando la funzione push_back()
 Costo computazionale: O(E)
-è la complessità di scorrimento della tavola Hash (mappa)
+è la complessità di scorrimento della mappa
 
 
 
